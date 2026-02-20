@@ -1,15 +1,65 @@
 body {
-    font-family: Arial;
+    font-family: Arial, sans-serif;
+    background: #f4f6f9;
+    display: flex;
+    justify-content: center;
+    padding: 20px;
+}
+
+.container {
+    background: white;
+    width: 100%;
+    max-width: 500px;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+h1 {
     text-align: center;
 }
 
+.input-section {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
+}
+
 input, select, button {
-    margin: 10px;
     padding: 8px;
+    font-size: 14px;
 }
 
 button {
-    background: blue;
+    background: #007bff;
     color: white;
     border: none;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+button:hover {
+    opacity: 0.9;
+}
+
+.clear-btn {
+    background: red;
+}
+
+ul {
+    list-style: none;
+    padding: 0;
+}
+
+li {
+    display: flex;
+    justify-content: space-between;
+    margin: 5px 0;
+}
+
+@media (max-width: 600px) {
+    .input-section {
+        flex-direction: column;
+    }
 }
