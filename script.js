@@ -1,6 +1,6 @@
 let expenses = JSON.parse(localStorage.getItem("expenses")) || [];
-
 let totalAmount = 0;
+let chart;
 
 function saveToLocalStorage() {
     localStorage.setItem("expenses", JSON.stringify(expenses));
@@ -11,19 +11,27 @@ function renderExpenses() {
     expenseList.innerHTML = "";
     totalAmount = 0;
 
+    let categoryTotals = {};
+
     expenses.forEach((expense, index) => {
         totalAmount += expense.amount;
+
+        if (!categoryTotals[expense.category]) {
+            categoryTotals[expense.category] = 0;
+        }
+        categoryTotals[expense.category] += expense.amount;
 
         let li = document.createElement("li");
         li.innerHTML = `
             ${expense.category} - ₹${expense.amount}
             <button onclick="deleteExpense(${index})">❌</button>
         `;
-
         expenseList.appendChild(li);
     });
 
     document.getElementById("total").innerText = totalAmount;
+
+    updateChart(categoryTotals);
 }
 
 function addExpense() {
@@ -35,16 +43,13 @@ function addExpense() {
         return;
     }
 
-    let newExpense = {
+    expenses.push({
         category: category,
         amount: parseInt(amount)
-    };
-
-    expenses.push(newExpense);
+    });
 
     saveToLocalStorage();
     renderExpenses();
-
     document.getElementById("amount").value = "";
 }
 
@@ -54,5 +59,29 @@ function deleteExpense(index) {
     renderExpenses();
 }
 
-// Load data when page opens
+function clearAll() {
+    expenses = [];
+    saveToLocalStorage();
+    renderExpenses();
+}
+
+function updateChart(categoryTotals) {
+    let ctx = document.getElementById("expenseChart").getContext("2d");
+
+    if (chart) {
+        chart.destroy();
+    }
+
+    chart = new Chart(ctx, {
+        type: "bar",
+        data: {
+            labels: Object.keys(categoryTotals),
+            datasets: [{
+                label: "Expenses by Category",
+                data: Object.values(categoryTotals)
+            }]
+        }
+    });
+}
+
 renderExpenses();
